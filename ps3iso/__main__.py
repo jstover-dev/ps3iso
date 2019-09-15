@@ -54,16 +54,13 @@ def main(argv=None):
     games = Game.search(args.input)
 
     if args.rename:
-        excluded = []
-        for game in games:
-            if str(game)=='QQQQQQQQQQQQQQQQ':
-                excluded += [game]
-            else:
-                # Do rename here
-                pass
+        if args.input.resolve().is_dir():
+            print('Scanning directory for PS3 ISOs...')
+        Game.rename_all(list(games), args.format)
+
     else:
         for game in games:
-            print(game)
+            game.print_info(args.format)
 
 
 if __name__ == '__main__':
