@@ -104,18 +104,24 @@ class SfoFile(object):
         elif item in REQUIRED_PS3_SFO_PARAMETERS:
             raise AttributeError(f'Required PS3 SFO parameter `{item}` not found. This is not a valid PS3 SFO')
 
+    def __iter__(self):
+        return ((k, v) for k, v in self.__dict__.items() if k in VALID_SFO_PARAMETERS)
+
     def format(self, fmt):
-        def cleanup(e):
-            return str(e).strip()
+        def param(name):
+            return str(getattr(self, name, '')).strip()
         return (fmt
-                .replace('%C', cleanup(self.sfo.CATEGORY))
-                .replace('%P', cleanup(self.sfo.PARENTAL_LEVEL))
-                .replace('%p', cleanup(self.sfo.PS3_SYSTEM_VER))
-                .replace('%R', cleanup(self.sfo.RESOLUTION))
-                .replace('%S', cleanup(self.sfo.SOUND_FORMAT))
-                .replace('%T', cleanup(self.sfo.TITLE))
-                .replace('%I', cleanup(self.sfo.TITLE_ID))
-                .replace('%V', cleanup(self.sfo.VERSION))
+                .replace('%A', param('APP_VER'))
+                .replace('%a', param('ATTRIBUTE'))
+                .replace('%C', param('CATEGORY'))
+                .replace('%L', param('LICENSE'))
+                .replace('%P', param('PARENTAL_LEVEL'))
+                .replace('%p', param('PS3_SYSTEM_VER'))
+                .replace('%R', param('RESOLUTION'))
+                .replace('%S', param('SOUND_FORMAT'))
+                .replace('%T', param('TITLE'))
+                .replace('%I', param('TITLE_ID'))
+                .replace('%V', param('VERSION'))
                 )
 
     @classmethod
