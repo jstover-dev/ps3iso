@@ -8,7 +8,7 @@ setup(
     author='Joshua Stover',
     author_email='jmstover6@gmail.com',
     description='CLI tool and Python library for managing Playstation 3 image files',
-    packages=find_packages(include=['ps3info*']),
+    packages=find_packages(include=['ps3iso*']),
     entry_points={
         'console_scripts': [
             'ps3iso = ps3iso.__main__:main',
