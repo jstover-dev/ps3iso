@@ -7,3 +7,6 @@ __pycache__/
 venv/
 doc/src/apidoc/
 doc/build/
+dist/
+*.egg-info/
+build/
