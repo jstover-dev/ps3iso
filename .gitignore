@@ -1,0 +1,9 @@
+*.swp
+*.pyc
+.coverage
+.idea/
+htmlcov/
+__pycache__/
+venv/
+doc/src/apidoc/
+doc/build/

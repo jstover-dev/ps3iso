@@ -1,0 +1,8 @@
+coverage
+fastentrypoints
+pytest
+sphinx
+sphinxcontrib-apidoc
+vulture
+wheel
+
