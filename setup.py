@@ -1,13 +1,18 @@
 from setuptools import setup, find_packages
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(
     name='ps3iso',
-    version='0.2',
+    version='0.3',
     url='https://git.sr.ht/~jmstover/ps3iso',
     license='MIT',
     author='Joshua Stover',
     author_email='jmstover6@gmail.com',
     description='CLI tool and Python library for managing Playstation 3 image files',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(include=['ps3iso*']),
     entry_points={
         'console_scripts': [
