@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ps3iso',
-    version='0.1',
+    version='0.2',
     url='https://git.sr.ht/~jmstover/ps3iso',
     license='MIT',
     author='Joshua Stover',

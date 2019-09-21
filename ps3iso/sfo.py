@@ -1,7 +1,9 @@
+from __future__ import annotations
 import struct
+from typing import BinaryIO
 from collections import namedtuple
 
-SfoIndexEntry = namedtuple('SfoIndexEntry', ['key_offset', 'fmt', 'len', 'maxlen', 'data_offset'])
+_SfoIndexEntry = namedtuple('SfoIndexEntry', ['key_offset', 'fmt', 'len', 'maxlen', 'data_offset'])
 
 SFO_HEADER_MAGIC = [0x00, 0x50, 0x53, 0x46]
 
@@ -92,6 +94,9 @@ class SfoParseError(Exception):
 
 
 class SfoFile(object):
+    """
+        SfoFile is a class capable of parsing the PARAM.SFO file found on Playstation 3 game discs
+    """
 
     def __repr__(self):
         return '\n'.join(f'{k}: {v}' for k, v in self.__dict__.items())
@@ -107,7 +112,29 @@ class SfoFile(object):
     def __iter__(self):
         return ((k, v) for k, v in self.__dict__.items() if k in VALID_SFO_PARAMETERS)
 
-    def format(self, fmt):
+    def format(self, fmt: str) -> str:
+        """
+        Return a string representing the PARAM.SFO data contained in the current object.
+        Wildcards in the formatting string are replaced with the corresponding SFO data.
+
+        ========  =========
+        Variable  Parameter
+        ========  =========
+        %a        APP_VER
+        %a        ATTRIBUTE
+        %C        CATEGORY
+        %L        LICENSE
+        %P        PARENTAL_LEVEL
+        %p        PS3_SYSTEM_VER
+        %R        RESOLUTION
+        %S        SOUND_FORMAT
+        %T        TITLE
+        %I        TITLE_ID
+        %V        VERSION
+        ========  =========
+
+        :param fmt: Formatting string
+        """
         def param(name):
             return str(getattr(self, name, '')).strip()
         return (fmt
@@ -125,22 +152,27 @@ class SfoFile(object):
                 )
 
     @classmethod
-    def parse(cls, source):
-        source.seek(0)
+    def parse(cls, fp: BinaryIO) -> SfoFile:
+        """
+        Parse the file or stream and create a new SfoFile object
 
-        if list(cls._readbytes(source, 4)) != SFO_HEADER_MAGIC:
+        :param fp: Opened file or seekable stream to parse
+        """
+        fp.seek(0)
+
+        if list(cls._readbytes(fp, 4)) != SFO_HEADER_MAGIC:
             raise SfoParseError(f'Magic bytes ({SFO_HEADER_MAGIC}) not found')
 
         sfo_data = {
-            'sfo_version': '.'.join((str(int(b)) for b in cls._readbytes(source, 4).rstrip(b'\x00')))
+            'sfo_version': '.'.join((str(int(b)) for b in cls._readbytes(fp, 4).rstrip(b'\x00')))
         }
 
-        _key_table_start = cls._readint(source)
-        _data_table_start = cls._readint(source)
-        _table_entries = cls._readint(source)
-        _index = cls._read_index(source, _table_entries)
+        _key_table_start = cls._readint(fp)
+        _data_table_start = cls._readint(fp)
+        _table_entries = cls._readint(fp)
+        _index = cls._read_index(fp, _table_entries)
         sfo_data.update(
-            cls._read_data(source, _index, _key_table_start, _data_table_start)
+            cls._read_data(fp, _index, _key_table_start, _data_table_start)
         )
 
         missing = [x for x in REQUIRED_PS3_SFO_PARAMETERS if x not in sfo_data]
@@ -152,7 +184,10 @@ class SfoFile(object):
         return psf
 
     @classmethod
-    def parse_file(cls, path):
+    def parse_file(cls, path: str) -> SfoFile:
+        """
+        Parse the file at the given path with :meth:`.parse()`
+        """
         with open(path, 'rb') as f:
             return cls.parse(f)
 
@@ -195,7 +230,7 @@ class SfoFile(object):
                 if val == _fmt_bytes:
                     _fmt = name
                     break
-            indexes += [SfoIndexEntry(_key_offset, _fmt, _len, _maxlen, _data_offset)]
+            indexes += [_SfoIndexEntry(_key_offset, _fmt, _len, _maxlen, _data_offset)]
         return indexes
 
     @classmethod

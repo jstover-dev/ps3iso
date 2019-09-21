@@ -32,6 +32,7 @@ extensions = [
     'sphinxcontrib.apidoc',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx_autodoc_typehints',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -59,4 +60,7 @@ html_static_path = ['_static']
 apidoc_module_dir = '../../ps3iso'
 apidoc_output_dir = 'apidoc'
 apidoc_excluded_paths = ['']
-apidoc_separate_modules = True
+apidoc_separate_modules = False
+apidoc_toc_file = False
+apidoc_module_first = True
+
