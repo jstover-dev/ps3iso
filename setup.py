@@ -21,5 +21,11 @@ setup(
     },
     python_requires='>=3.6',
     install_requires=[
-    ]
+    ],
+    classifiers=[
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+    ],
 )
