@@ -2,6 +2,31 @@
 
 Command line tool and Python library for managing existing Playstation 3 image files
 
+[[PyPi](https://pypi.org/project/ps3iso/)]
+[[sourcehut](https://git.sr.ht/~jmstover/ps3iso)]
+
+
+## Installing
+
+```
+pip install ps3iso
+```
+
+
+## Dependencies
+
+
+### isoinfo
+
+`isoinfo` needs to be in the system PATH in order to extract SFO data directly from .iso images
+
+ Windows: `https://smithii.com/files/cdrtools-latest.zip`
+ 
+ macOS: `brew install cdrtools`
+ 
+ Linux: `brew install genisoimage`
+
+
 
 ## Quick Program Help
 ```
@@ -63,18 +88,3 @@ print("Game ID = %s" % sfo.TITLE_ID)
 print(sfo.format("Game Title = %T\n"))
 ```
 
-
-
-
-## Dependencies
-
-
-### isoinfo
-
-`isoinfo` needs to be in the system PATH in order to extract SFO data directly from .iso images
-
- Windows: `https://smithii.com/files/cdrtools-latest.zip`
- 
- macOS: `brew install cdrtools`
- 
- Linux: `brew install genisoimage`
