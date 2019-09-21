@@ -9,7 +9,9 @@ DOC_BUILD_DIR   ?= doc/build
 DOC_SOURCE_DIR  ?= doc/src
 DOC_APIDOC_DIR  ?= doc/src/apidoc
 
-default: doc coverage
+BUILD_DIRS 		:= $(wildcard build/) $(wildcard dist/) $(wildcard *.egg-info) $(wildcard htmlcov/)
+
+default: build doc coverage
 
 test: coverage
 
@@ -22,6 +24,13 @@ doc:
 	@$(SPHINX_BUILD) -b html "$(DOC_SOURCE_DIR)" "$(DOC_BUILD_DIR)" $(SPHINX_OPTS)
 
 clean:
-	rm -fr "$(DOC_BUILD_DIR)" "$(DOC_APIDOC_DIR)"
+	rm -fr "$(DOC_BUILD_DIR)" "$(DOC_APIDOC_DIR)" $(BUILD_DIRS)
 
-.PHONY: default test coverage doc clean
+build:
+	python setup.py sdist bdist_wheel
+
+upload: build
+	twine upload dist/*
+
+
+.PHONY: default build test upload coverage doc clean
