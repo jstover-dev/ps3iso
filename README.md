@@ -3,6 +3,7 @@
 Command line tool and Python library for managing existing Playstation 3 image files
 
 [![builds.sr.ht status](https://builds.sr.ht/~jmstover/ps3iso.svg)](https://builds.sr.ht/~jmstover/ps3iso?)
+[![Documentation Status](https://readthedocs.org/projects/ps3iso/badge/?version=latest)](https://ps3iso.readthedocs.io/en/latest/?badge=latest)
 
 [[PyPi](https://pypi.org/project/ps3iso/)]
 [[sourcehut](https://git.sr.ht/~jmstover/ps3iso)]
