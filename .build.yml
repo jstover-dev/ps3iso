@@ -11,7 +11,7 @@ sources:
   - https://git.sr.ht/~jmstover/ps3iso
 
 secrets:
-  - 2aa81fff-60e1-4458-a093-d7455d124b33
+  - 553a1730-f7ae-47a8-8bea-207728ea1aec
 
 tasks:
   - setup: |
