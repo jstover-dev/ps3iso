@@ -114,10 +114,13 @@ class Game(object):
         def maxwidth(_targets):
             return max(len(str(t[0])) for t in _targets)
 
-        width = maxwidth(targets)
-        for src, dst in sorted(targets, key=lambda x: x[0]):
-            print(f'{str(src).ljust(width)} -> {dst}')
-            src.rename(dst)
+        if targets:
+            width = maxwidth(targets)
+            for src, dst in sorted(targets, key=lambda x: x[0]):
+                print(f'{str(src).ljust(width)} -> {dst}')
+                src.rename(dst)
+        else:
+            print('No rename targets found.')
 
         if duplicates:
             print('\nCowardly refusing to rename files where duplicates would be overwritten:')
