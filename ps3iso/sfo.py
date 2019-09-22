@@ -175,7 +175,7 @@ class SfoFile(object):
         )
 
         missing = [x for x in REQUIRED_PS3_SFO_PARAMETERS if x not in sfo_data]
-        if len(missing) > 1:
+        if len(missing) > 0:
             raise SfoParseError(f'Not a valid PS3 image. Required SFO parameters were missing: {missing}')
 
         psf = cls()
