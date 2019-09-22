@@ -9,6 +9,9 @@ packages:
 sources:
   - https://git.sr.ht/~jmstover/ps3iso
 
+secrets:
+  - 2aa81fff-60e1-4458-a093-d7455d124b33
+
 tasks:
   - setup: |
       cd ps3iso
@@ -16,8 +19,13 @@ tasks:
       source venv/bin/activate
       python -V
       pip install -q -r requirements-dev.txt
-  - build: |
+  - test: |
       cd ps3iso
       source venv/bin/activate
       make test
+  - doc: |
+      cd ps3iso
+      source venv/bin/activate
+      make doc
+      [ ! -x ~/.rtd-hook ] || ~/.rtd-hook
 
