@@ -19,7 +19,7 @@ class ArgumentParser(_ArgumentParser):
         raise ArgumentParserError()
 
 
-def parse_args(argv=None):
+def get_argparser(argv=None):
     parser = ArgumentParser()
     parser.add_argument('-i', '--input',
                         type=Path,
@@ -30,7 +30,11 @@ def parse_args(argv=None):
     parser.add_argument('--rename',
                         action='store_true',
                         help='Rename .iso and supporting files to a format string based on PS3 metadata')
+    return parser
 
+
+def parse_args(argv=None):
+    parser = get_argparser()
     _args = parser.parse_args(argv)
     if _args.rename and _args.format is None:
         parser.error('-f/--format is required for rename operation')

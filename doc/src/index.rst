@@ -7,12 +7,15 @@ PS3ISO Documentation
    :maxdepth: 2
    :caption: Contents:
 
+   cli
    apidoc/ps3iso
-
+   history
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
+
+.. * :ref:`modindex`
+
