@@ -16,7 +16,7 @@ tasks:
       python -V
       pip install -q -r requirements-dev.txt
   - build: |
-	  cd ps3iso
+      cd ps3iso
       source venv/bin/activate
       make test
 
