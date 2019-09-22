@@ -1,18 +1,22 @@
-image: debian
+image: debian/stable
 
 packages:
   - python3
   - python3-virtualenv
+  - python3-setuptools
 
 sources:
   - https://git.sr.ht/~jmstover/ps3iso
 
 tasks:
   - setup: |
-      virtualenv venv
+      cd ps3iso
+      python3 -m virtualenv -p python3 venv
       source venv/bin/activate
-      pip install -r requirements.txt -r requirements-dev.txt
       python -V
+      pip install -q -r requirements-dev.txt
   - build: |
+	  cd ps3iso
+      source venv/bin/activate
       make test
 
