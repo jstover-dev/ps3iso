@@ -1,10 +1,27 @@
 import unittest
+import ps3iso.sfo
 from ps3iso.sfo import SfoFile, SfoParseError
 
 
 class TestSfoFile(unittest.TestCase):
 
     SFO_FILE = 'test/data/PARAM.SFO'
+
+    SFO_DATA = {
+            'APP_VER': '01.00',
+            'ATTRIBUTE': 32,
+            'BOOTABLE': 1,
+            'CATEGORY': 'DG',
+            'LICENSE': '''Library programs ©Sony Computer Entertainment Inc. Licensed for play on the PLAYSTATION®3 Computer Entertainment System or authorized PLAYSTATION®3 format systems. For full terms and conditions see the user's manual. This product is authorized and produced under license from Sony Computer Entertainment Inc. Use is subject to the copyright laws and the terms and conditions of the user's license.''', # noqa: E501
+            'PARENTAL_LEVEL': 5,
+            'PS3_SYSTEM_VER': '02.5200',
+            'RESOLUTION': 63,
+            'SOUND_FORMAT': 1,
+            'TITLE': '---- Example PS3ISO Game Title ----',
+            'TITLE_ID': 'BLES00000',
+            'VERSION': '01.00',
+            'sfo_version': '1.1'
+    }
 
     def test_repr(self):
         sfo = SfoFile.parse_file(self.SFO_FILE)
@@ -20,6 +37,10 @@ class TestSfoFile(unittest.TestCase):
         with self.assertRaises(SfoParseError):
             SfoFile.parse_file(self.SFO_FILE + '.truncated')
 
+    def test_invalid_ps3(self):
+        with self.assertRaises(SfoParseError):
+            sfo = SfoFile.parse_file(self.SFO_FILE + '.invalid_ps3')
+
     def test_parse_file(self):
         SfoFile.parse_file(self.SFO_FILE)
 
@@ -33,21 +54,38 @@ class TestSfoFile(unittest.TestCase):
             bio = io.BytesIO(f.read())
         SfoFile.parse(bio)
 
-    def test_sfo_attributes(self):
+    def test_attributes_exact(self):
         sfo = SfoFile.parse_file(self.SFO_FILE)
         self.maxDiff = None
-        self.assertDictEqual(sfo.__dict__, {
-            'APP_VER': '01.00',
-            'ATTRIBUTE': 32,
-            'BOOTABLE': 1,
-            'CATEGORY': 'DG',
-            'LICENSE': '''Library programs ©Sony Computer Entertainment Inc. Licensed for play on the PLAYSTATION®3 Computer Entertainment System or authorized PLAYSTATION®3 format systems. For full terms and conditions see the user's manual. This product is authorized and produced under license from Sony Computer Entertainment Inc. Use is subject to the copyright laws and the terms and conditions of the user's license.''', # noqa: E501
-            'PARENTAL_LEVEL': 5,
-            'PS3_SYSTEM_VER': '02.5200',
-            'RESOLUTION': 63,
-            'SOUND_FORMAT': 1,
-            'TITLE': '---- Example PS3ISO Game Title ----',
-            'TITLE_ID': 'BLES00000',
-            'VERSION': '01.00',
-            'sfo_version': '1.1'
-        })
+        self.assertDictEqual(sfo.__dict__, self.SFO_DATA)
+
+    def test_attributes_valid_sfo(self):
+        sfo = SfoFile.parse_file(self.SFO_FILE)
+
+        # Invalid SFO param
+        with self.assertRaises(AttributeError) as e:
+            x = sfo.INVALID_ATTR
+
+        # Valid but missing optional PS3 param
+        with self.assertRaises(AttributeError) as e:
+            x = sfo.PATCH_FILE
+
+        # Required but somehow missing PS3 param
+        del sfo.TITLE
+        with self.assertRaises(AttributeError) as e:
+            x = sfo.TITLE
+
+    def test_iterator(self):
+        sfo = SfoFile.parse_file(self.SFO_FILE)
+        keys = [k for k, v in sfo]
+        self.assertTrue(all(a in keys for a in ps3iso.sfo.REQUIRED_PS3_SFO_PARAMETERS))
+
+        expected = {k: v for k, v in self.SFO_DATA.items() if k in ps3iso.sfo.VALID_SFO_PARAMETERS}
+        self.maxDiff = None
+        self.assertEqual(dict((k, v) for k, v in sfo), expected)
+        self.assertEqual(dict(sfo), expected)
+
+    def test_format(self):
+        sfo = SfoFile.parse_file(self.SFO_FILE)
+        self.assertEqual(sfo.format('%I'), 'BLES00000')
+        # TODO: Test all formatting variables

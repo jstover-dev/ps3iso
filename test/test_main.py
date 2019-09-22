@@ -1,3 +1,4 @@
+import os
 import unittest
 
 
@@ -15,7 +16,7 @@ class TestSfoFile(unittest.TestCase):
             parse_args(['-r', '-f', '%T'])
 
         with self.assertRaises(ArgumentParserError):
-            parse_args(['-i', self.SFO_FILE, '-r'])
+            parse_args(['-i', self.SFO_FILE, '--rename'])
 
         args = parse_args(['-i', self.SFO_FILE])
         self.assertEqual(str(args.input), self.SFO_FILE)
@@ -39,4 +40,14 @@ class TestSfoFile(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main(['-r'])
 
-        #main(['-i', self.SFO_FILE])
+        main(['-i', '.', '--rename', '-f', '""'])
+        main(['-i', '.'])
+
+        path = os.environ['PATH']
+        del os.environ['PATH']
+        try:
+            # noinspection PyTypeChecker
+            with self.assertRaises(SystemExit):
+                main(['-i', '.'])
+        finally:
+            os.environ['PATH'] = path
