@@ -16,6 +16,8 @@ author = 'Joshua Stover'
 
 # -- General configuration ---------------------------------------------------
 
+master_doc = 'index'
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
