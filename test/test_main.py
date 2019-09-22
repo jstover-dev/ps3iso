@@ -40,14 +40,18 @@ class TestSfoFile(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main(['-r'])
 
+        # Run the rename_all path
         main(['-i', '.', '--rename', '-f', '""'])
+
+        # Run the info path
         main(['-i', '.'])
 
+        # Force isoinfo to not be found in PATH
         path = os.environ['PATH']
         del os.environ['PATH']
         try:
-            # noinspection PyTypeChecker
-            with self.assertRaises(SystemExit):
-                main(['-i', '.'])
+            main(['-i', '.'])
+        except SystemExit:
+            pass
         finally:
             os.environ['PATH'] = path
