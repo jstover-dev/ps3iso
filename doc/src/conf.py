@@ -26,7 +26,6 @@ extensions = [
     'sphinxcontrib.fulltoc',
     'sphinx_autodoc_typehints',
     'sphinx_git',
-    'sphinx_sitemap',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -41,11 +40,6 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'nature'
-#import sphinx_glpi_theme as theme_module
-#html_theme_path = [theme_module.get_html_themes_path()]
-
-# Set for sphinx-sitemap when deploying
-#html_baseurl = 'https://example.com/docs/'
 
 
 # -- Apidoc setup ------------------------------------------------------------
