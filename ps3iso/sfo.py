@@ -114,7 +114,7 @@ class SfoFile(object):
     def format(self, fmt: str) -> str:
         """
         Return a string representing the PARAM.SFO data contained in the current object.
-        Wildcards in the formatting string are replaced with the corresponding SFO data.
+        Variables in the formatting string are replaced with the corresponding SFO data.
 
         ========  =========
         Variable  Parameter
@@ -124,12 +124,12 @@ class SfoFile(object):
         %C        CATEGORY
         %L        LICENSE
         %P        PARENTAL_LEVEL
-        %p        PS3_SYSTEM_VER
         %R        RESOLUTION
         %S        SOUND_FORMAT
         %T        TITLE
         %I        TITLE_ID
         %V        VERSION
+        %v        PS3_SYSTEM_VER
         ========  =========
 
         :param fmt: Formatting string
@@ -142,12 +142,12 @@ class SfoFile(object):
                 .replace('%C', param('CATEGORY'))
                 .replace('%L', param('LICENSE'))
                 .replace('%P', param('PARENTAL_LEVEL'))
-                .replace('%p', param('PS3_SYSTEM_VER'))
                 .replace('%R', param('RESOLUTION'))
                 .replace('%S', param('SOUND_FORMAT'))
                 .replace('%T', param('TITLE'))
                 .replace('%I', param('TITLE_ID'))
                 .replace('%V', param('VERSION'))
+                .replace('%v', param('PS3_SYSTEM_VER'))
                 )
 
     @classmethod

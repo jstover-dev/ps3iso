@@ -43,7 +43,7 @@ class Game(object):
 
     def format_file(self, f: Union[str, Path], fmt: str, fill='') -> Path:
         """
-        Return a new path for an input file, formatted according to the SFO data and formatting string.
+        Return a new path for an input file, formatted according to the SFO data and format string.
         The existing file extension will be preserved.
 
         .. seealso:: :meth:`.SfoFile.format`
@@ -58,9 +58,22 @@ class Game(object):
         return (f.parent / name).with_suffix(f.suffix.lower())
 
     def print_info(self, fmt=None) -> None:
-        """
+        r"""
         Print information about the current game set.
-        Accepts a custom output formatting string with SFO parameter wildcard support
+        Accepts a custom output formatting string with SFO parameter variable expansion support
+
+        In addition to the variables described by :meth:`.SfoFile.format`,
+        the following will be also expanded:
+
+        ========  =========
+        Variable  Parameter
+        ========  =========
+        %p        Full path of the existing file
+        %f        File name of the existing file
+        \\n       Newline character
+        \\t       Tab character
+        ========  =========
+
 
         .. seealso:: :meth:`.SfoFile.format`
 
@@ -71,7 +84,8 @@ class Game(object):
                 print(self.sfo.format(fmt)
                       .replace('\\n', '\n')
                       .replace('\\t', '\t')
-                      .replace('%F', str(f)))
+                      .replace('%f', f.name)
+                      .replace('%p', str(f)))
         else:
             width = max(len(str(k)) for k, v in self.sfo)
             print(f'\n{self.iso}')
