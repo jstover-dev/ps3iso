@@ -3,8 +3,6 @@ import struct
 from typing import BinaryIO
 from collections import namedtuple
 
-_SfoIndexEntry = namedtuple('SfoIndexEntry', ['key_offset', 'fmt', 'len', 'maxlen', 'data_offset'])
-
 SFO_HEADER_MAGIC = [0x00, 0x50, 0x53, 0x46]
 
 SFO_PARAMETER_FORMAT = {
@@ -166,12 +164,12 @@ class SfoFile(object):
             'sfo_version': '.'.join((str(int(b)) for b in cls._readbytes(fp, 4).rstrip(b'\x00')))
         }
 
-        _key_table_start = cls._readint(fp)
-        _data_table_start = cls._readint(fp)
-        _table_entries = cls._readint(fp)
-        _index = cls._read_index(fp, _table_entries)
+        key_table_start = cls._readint(fp)
+        data_table_start = cls._readint(fp)
+        table_entries = cls._readint(fp)
+        index = cls._read_index(fp, table_entries)
         sfo_data.update(
-            cls._read_data(fp, _index, _key_table_start, _data_table_start)
+            cls._read_data(fp, index, key_table_start, data_table_start)
         )
 
         missing = [x for x in REQUIRED_PS3_SFO_PARAMETERS if x not in sfo_data]
@@ -218,18 +216,19 @@ class SfoFile(object):
     @classmethod
     def _read_index(cls, src, nkeys):
         indexes = []
+        SfoIndexEntry = namedtuple('SfoIndexEntry', ['key_offset', 'fmt', 'len', 'maxlen', 'data_offset'])
         for _ in range(nkeys):
-            _key_offset = cls._readshort(src)
-            _fmt_bytes = list(bytearray(struct.pack("<H", cls._readshort(src))))
-            _fmt = 'unknown'
-            _len = cls._readint(src)
-            _maxlen = cls._readint(src)
-            _data_offset = cls._readint(src)
+            key_offset = cls._readshort(src)
+            fmt_bytes = list(bytearray(struct.pack("<H", cls._readshort(src))))
+            fmt = 'unknown'
+            data_len = cls._readint(src)
+            data_maxlen = cls._readint(src)
+            data_offset = cls._readint(src)
             for name, val in SFO_PARAMETER_FORMAT.items():
-                if val == _fmt_bytes:
-                    _fmt = name
+                if val == fmt_bytes:
+                    fmt = name
                     break
-            indexes += [_SfoIndexEntry(_key_offset, _fmt, _len, _maxlen, _data_offset)]
+            indexes += [SfoIndexEntry(key_offset, fmt, data_len, data_maxlen, data_offset)]
         return indexes
 
     @classmethod
