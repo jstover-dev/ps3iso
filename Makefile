@@ -18,6 +18,8 @@ test: coverage
 coverage:
 	coverage run -m --source $(MODULE_MAIN) $(MODULE_TEST)
 	coverage report
+
+coverage-html: coverage
 	coverage html
 
 doc:
@@ -33,4 +35,4 @@ upload: build
 	twine upload dist/*
 
 
-.PHONY: default build test upload coverage doc clean
+.PHONY: default build test upload coverage coverage-html doc clean
