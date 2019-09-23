@@ -4,7 +4,7 @@ Revision History
 master
 --------
 .. git_changelog::
-    :rev-list: v0.3.4..master
+    :rev-list: v0.3.4..
     :detailed-message-pre: True
 
 v0.3.4
