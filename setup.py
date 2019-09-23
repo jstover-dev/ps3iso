@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='ps3iso',
-    version='0.3.3',
+    version='0.3.4',
     url='https://git.sr.ht/~jmstover/ps3iso',
     license='MIT',
     author='Joshua Stover',
