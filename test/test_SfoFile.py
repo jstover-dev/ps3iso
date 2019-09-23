@@ -39,7 +39,7 @@ class TestSfoFile(unittest.TestCase):
 
     def test_invalid_ps3(self):
         with self.assertRaises(SfoParseError):
-            sfo = SfoFile.parse_file(self.SFO_FILE + '.invalid_ps3')
+            SfoFile.parse_file(self.SFO_FILE + '.invalid_ps3')
 
     def test_parse_file(self):
         SfoFile.parse_file(self.SFO_FILE)
@@ -87,5 +87,14 @@ class TestSfoFile(unittest.TestCase):
 
     def test_format(self):
         sfo = SfoFile.parse_file(self.SFO_FILE)
-        self.assertEqual(sfo.format('%I'), 'BLES00000')
-        # TODO: Test all formatting variables
+        self.assertEqual(sfo.format('%A'), str(self.SFO_DATA['APP_VER']))
+        self.assertEqual(sfo.format('%a'), str(self.SFO_DATA['ATTRIBUTE']))
+        self.assertEqual(sfo.format('%C'), str(self.SFO_DATA['CATEGORY']))
+        self.assertEqual(sfo.format('%L'), str(self.SFO_DATA['LICENSE']))
+        self.assertEqual(sfo.format('%P'), str(self.SFO_DATA['PARENTAL_LEVEL']))
+        self.assertEqual(sfo.format('%R'), str(self.SFO_DATA['RESOLUTION']))
+        self.assertEqual(sfo.format('%S'), str(self.SFO_DATA['SOUND_FORMAT']))
+        self.assertEqual(sfo.format('%T'), str(self.SFO_DATA['TITLE']))
+        self.assertEqual(sfo.format('%I'), str(self.SFO_DATA['TITLE_ID']))
+        self.assertEqual(sfo.format('%V'), str(self.SFO_DATA['VERSION']))
+        self.assertEqual(sfo.format('%v'), str(self.SFO_DATA['PS3_SYSTEM_VER']))
