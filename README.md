@@ -157,8 +157,8 @@ print(sfo.format("Game Title = %T\n"))
 
 1. Make sure the tests pass and docs build: `make coverage; make doc`
 1. Update the version number in setup.py
-1. Change 'master' to the new version number in doc/src/history.rst
+1. Change 'master' to the new version number in `doc/src/history.rst`
 1. Create a tag for the version e.g.: `git tag v1.2.3`
-1. Upload to Pypi
-1. Add a new master section to doc/src/history.rst
+1. Upload to PyPi
+1. Add a new master section to `doc/src/history.rst`
 
