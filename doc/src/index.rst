@@ -8,7 +8,7 @@ PS3ISO Documentation
    :caption: Contents:
 
    cli
-   apidoc/ps3iso
+   API Documentation <apidoc/ps3iso>
    history
 
 Indices and tables
