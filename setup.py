@@ -7,6 +7,11 @@ setup(
     name='ps3iso',
     version='0.3.4',
     url='https://git.sr.ht/~jmstover/ps3iso',
+    project_urls={
+        'Documentation': 'https://ps3iso.readthedocs.io/en/stable',
+        'Source': 'https://git.sr.ht/~jmstover/ps3iso',
+        'Tracker': 'https://todo.sr.ht/~jmstover/ps3iso',
+    },
     license='MIT',
     author='Joshua Stover',
     author_email='jmstover6@gmail.com',
