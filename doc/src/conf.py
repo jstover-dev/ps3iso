@@ -5,6 +5,7 @@ import sys
 # -- Path setup --------------------------------------------------------------
 
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.append(os.path.abspath('exts'))
 
 
 # -- Project information -----------------------------------------------------
@@ -26,6 +27,7 @@ extensions = [
     'sphinxcontrib.fulltoc',
     'sphinx_autodoc_typehints',
     'sphinx_git',
+    'generate_history',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
