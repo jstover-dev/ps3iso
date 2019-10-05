@@ -2,6 +2,7 @@ image: debian/stable
 
 packages:
   - curl
+  - rsync
   - python3
   - python3-virtualenv
   - python3-setuptools
@@ -12,21 +13,32 @@ sources:
 
 secrets:
   - a1e1fa62-c286-43a1-acf1-415c1d67e6cf
+  - caeee619-69e8-4d22-ab2c-617d7d07122d
+
+environment:
+    PACKAGE_NAME: ps3iso
+    ARTIFACT_HOST: artifact.jstover.dev
 
 tasks:
   - setup: |
-      cd ps3iso
+      cd ${PACKAGE_NAME}
       python3 -m virtualenv -p python3 venv
       source venv/bin/activate
       python -V
       pip install -q -r requirements-dev.txt
   - test: |
-      cd ps3iso
+      cd ${PACKAGE_NAME}
       source venv/bin/activate
       make test
   - doc: |
-      cd ps3iso
+      cd ${PACKAGE_NAME}
       source venv/bin/activate
       make doc
       [ ! -x ~/.rtd-hook ] || ~/.rtd-hook
+  - artifacts: |
+      cd ${PACKAGE_NAME}
+      source venv/bin/activate
+      make artifacts
+      ssh-keyscan -H ${ARTIFACT_HOST} >> $HOME/.ssh/known_hosts
+      rsync -vrz --delete artifacts/ "ci@${ARTIFACT_HOST}:"
 
