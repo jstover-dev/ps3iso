@@ -14,12 +14,15 @@ sources:
 secrets:
   - a1e1fa62-c286-43a1-acf1-415c1d67e6cf
   - caeee619-69e8-4d22-ab2c-617d7d07122d
+  - 8a4ff2c0-5378-4474-92fa-43de2201b9ba
 
 environment:
     PACKAGE_NAME: ps3iso
     ARTIFACT_HOST: artifact.jstover.dev
 
 tasks:
+  - triggers: |
+      [ ! -x ~/.jenkins-hook ] || ~/.jenkins-hook
   - setup: |
       cd ${PACKAGE_NAME}
       python3 -m virtualenv -p python3 venv
