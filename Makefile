@@ -1,7 +1,10 @@
+# Override Python interpreter
+PYTHON          ?= python
+
 MODULE_MAIN     := ps3iso
 MODULE_TEST     := test
-MODULE_VERSION  := $(shell python -c 'import setup; print(setup.version)')
-MODULE_LICENSE  := $(shell python -c 'import setup; print(setup.license)')
+MODULE_VERSION  := $(shell $(PYTHON) -c 'import setup; print(setup.version)')
+MODULE_LICENSE  := $(shell $(PYTHON) -c 'import setup; print(setup.license)')
 SOURCE_FILES    := $(shell find $(MODULE_MAIN) $(MODULE_TEST) setup.py test -iname '*.py')
 ARTIFACTS_DIR   := artifacts/
 
@@ -35,7 +38,7 @@ clean:
 	rm -fr "$(DOC_BUILD_DIR)" "$(DOC_APIDOC_DIR)" $(CLEAN_FILES)
 
 test:
-	python -m test
+	$(PYTHON) -m test
 
 
 # PyPi Targets
@@ -43,7 +46,7 @@ test:
 package: $(PYPI_SDIST)
 
 $(PYPI_SDIST): $(SOURCE_FILES)
-	python setup.py sdist bdist_wheel
+	$(PYTHON) setup.py sdist bdist_wheel
 	echo $(PYPI_SDIST)
 
 upload: package
