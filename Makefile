@@ -1,20 +1,22 @@
 # Find executables
 
-ifneq ($(shell type -p python3),)
+findpath = $(shell which $(1))
+
+ifneq ($(call findpath,python3),)
 PYTHON ?= python3
-else ifneq ($(shell type -p python),)
+else ifneq ($(call findpath,python),)
 PYTHON ?= python
 else
 $(error "Python interpreter not found in PATH")
 endif
 
-ifneq ($(shell type -p coverage),)
+ifneq ($(call findpath,coverage),)
 COVERAGE ?= coverage
-else ifneq ($(shell type -p python-coverage),)
+else ifneq ($(call findpath,python3-coverage),)
 COVERAGE ?= python3-coverage
 endif
 
-ANYBADGE ?= $(shell type -p anybadge)
+ANYBADGE ?= $(call findpath,anybadge)
 
 
 # Project
@@ -49,7 +51,19 @@ MAKEFILE_DIR    := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 CLEAN_FILES     := $(BUILD_DIRS) $(wildcard .coverage) $(wildcard *.pyc)
 
 
-default: package doc coverage-html artifacts
+default:
+	@echo "No target specified, try running one of the following:"
+	@echo "    make all             | Same as 'make artifacts coverage-html doc pypi'"
+	@echo "    make artifacts       | Generate artifacts such as bbadges"
+	@echo "    make clean           | Clean the working directory of all build files"
+	@echo "    make coverage        | Generate coverage report on the console stdout"
+	@echo "    make coverage-html   | Generate HTML coverage report"
+	@echo "    make doc             | Build the documentation"
+	@echo "    make pypi            | Build the package ready for PyPi upload"
+	@echo "    make pypi-upload     | Upload the package to PyPI"
+	@echo "    make test            | Run the unit tests without coverage report"
+
+all: artifacts coverage-html doc pypi
 
 clean:
 	rm -fr "$(DOC_BUILD_DIR)" "$(DOC_APIDOC_DIR)" $(CLEAN_FILES)
@@ -60,12 +74,12 @@ test:
 
 # PyPi Targets
 #------------------------------------------------------------------------------
-package: $(PYPI_SDIST)
+pypi: $(PYPI_SDIST)
 
 $(PYPI_SDIST): $(SOURCE_FILES)
 	$(PYTHON) setup.py sdist bdist_wheel
 
-upload: package
+pypi-upload: pypi
 	twine upload dist/*
 
 
@@ -73,36 +87,33 @@ upload: package
 #------------------------------------------------------------------------------
 doc: $(DOC_BUILD_DIR)
 
-$(DOC_BUILD_DIR): _sphinx_build $(SOURCE_FILES)
-	@$(SPHINX_BUILD) -b html "$(DOC_SOURCE_DIR)" "$(DOC_BUILD_DIR)" $(SPHINX_OPTS)
-
-
+$(DOC_BUILD_DIR): $(SOURCE_FILES) | _sphinx_build
+	$(SPHINX_BUILD) -b html "$(DOC_SOURCE_DIR)" "$(DOC_BUILD_DIR)" $(SPHINX_OPTS)
 
 
 # Coverage Targets
 #------------------------------------------------------------------------------
-coverage: _coverage $(COVERAGE_FILE)
+coverage: $(COVERAGE_FILE) | _coverage
 	$(COVERAGE) report
 
 coverage-html: $(COVERAGE_HTML)
 
-$(COVERAGE_HTML): _coverage $(COVERAGE_FILE)
+$(COVERAGE_HTML): $(COVERAGE_FILE) | _coverage
 	[ ! -d "$(COVERAGE_HTML)" ] || rm -r "$(COVERAGE_HTML)"
 	$(COVERAGE) html -d "$(COVERAGE_HTML)"
 
-$(COVERAGE_FILE): _coverage $(SOURCE_FILES)
+$(COVERAGE_FILE): $(SOURCE_FILES) | _coverage
 	$(COVERAGE) run -m --source $(MODULE_MAIN) $(MODULE_TEST)
-
 
 
 # Artifact Targets
 #------------------------------------------------------------------------------
 artifacts: $(COVERAGE_BADGE) coverage-html
 
-$(COVERAGE_BADGE): _coverage _anybadge $(BADGES_DIR) $(COVERAGE_FILE)
+$(COVERAGE_BADGE): $(BADGES_DIR) $(COVERAGE_FILE) | _coverage _anybadge
 	$(ANYBADGE) -v $$($(COVERAGE) report | awk '/^TOTAL/{gsub("%","",$$4);print $$4}') -o -f $@ coverage
 
-$(LICENSE_BADGE): _anybadge $(BADGES_DIR) LICENSE
+$(LICENSE_BADGE): $(BADGES_DIR) LICENSE | _anybadge
 	$(ANYBADGE) -c '#97ca00' -l license -v $(MODULE_LICENSE) -o -f $@
 
 $(BADGES_DIR):
@@ -113,6 +124,7 @@ $(ARTIFACTS_DIR):
 
 
 # Targets which fail if the executable is not available
+#------------------------------------------------------------------------------
 _anybadge:
 ifeq ($(ANYBADGE),)
 	$(error anybadge executable not found in PATH. Unable to build badges.)
@@ -128,5 +140,5 @@ ifeq ($(SPHINX_BUILD),)
 	$(error sphinx-build executable not found in PATH. Unable to build documentation.) 
 endif
 
-.PHONY: default clean test doc coverage coverage-html upload artifacts package badges _anybage _coverage _sphinx_build
+.PHONY: default all clean test doc coverage coverage-html pypi pypi-upload artifacts badges _anybage _coverage _sphinx_build
 
