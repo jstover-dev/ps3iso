@@ -39,6 +39,7 @@ def make_directive(current_tag, last_tag, title=None):
         '-' * len(title),
         r'.. git_changelog::',
         r'    :detailed-message-pre: True',
+        r'    :filename_filter: LICENSE|.*\.(py|md|rst)',
         revision,
     ]
     return '\n'.join(directive) + '\n'
