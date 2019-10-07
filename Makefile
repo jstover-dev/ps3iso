@@ -1,5 +1,6 @@
-# Override Python interpreter
-PYTHON          ?= python
+# Override executable names
+PYTHON          ?= python3
+COVERAGE 		?= coverage
 
 MODULE_MAIN     := ps3iso
 MODULE_TEST     := test
@@ -66,16 +67,16 @@ $(DOC_BUILD_DIR): $(SOURCE_FILES)
 # Coverage Targets
 #------------------------------------------------------------------------------
 coverage: $(COVERAGE_FILE)
-	coverage report
+	$(COVERAGE) report
 
 coverage-html: $(COVERAGE_HTML)
 
 $(COVERAGE_HTML): $(COVERAGE_FILE)
 	[ ! -d "$(COVERAGE_HTML)" ] || rm -r "$(COVERAGE_HTML)"
-	coverage html -d "$(COVERAGE_HTML)"
+	$(COVERAGE) html -d "$(COVERAGE_HTML)"
 
 $(COVERAGE_FILE): $(SOURCE_FILES)
-	coverage run -m --source $(MODULE_MAIN) $(MODULE_TEST)
+	$(COVERAGE) run -m --source $(MODULE_MAIN) $(MODULE_TEST)
 
 
 
