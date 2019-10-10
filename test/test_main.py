@@ -1,6 +1,9 @@
 import os
+import shutil
 import unittest
+import pytest
 
+ISOINFO_UNAVAILABLE = shutil.which('isoinfo') is None
 
 class TestSfoFile(unittest.TestCase):
 
@@ -33,15 +36,13 @@ class TestSfoFile(unittest.TestCase):
         with self.assertRaises(SystemExit):
             SourceFileLoader('__main__', ps3iso.__main__.__file__).load_module()
 
+    @pytest.mark.skipif(ISOINFO_UNAVAILABLE, reason='Missing isoinfo causes tests to fail')
     def test_main_fn(self):
         from ps3iso.__main__ import main
 
         # noinspection PyTypeChecker
         with self.assertRaises(SystemExit):
             main(['-r'])
-
-        # Run the rename_all path
-        main(['-i', '.', '--rename', '-f', '""'])
 
         # Run the info path
         main(['-i', '.'])
