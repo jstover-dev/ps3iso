@@ -11,3 +11,5 @@ dist/
 *.egg-info/
 build/
 artifacts/
+.pybuild/
+*.deb
