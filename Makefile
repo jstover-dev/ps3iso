@@ -18,13 +18,14 @@ endif
 
 ANYBADGE ?= $(call findpath,anybadge)
 
+# recursive wilcard (https://stackoverflow.com/a/18258352)
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 # Project
 MODULE_MAIN     := ps3iso
 MODULE_TEST     := test
-MODULE_VERSION  := $(shell $(PYTHON) -c 'import setup; print(setup.version)')
-MODULE_LICENSE  := $(shell $(PYTHON) -c 'import setup; print(setup.license)')
-SOURCE_FILES    := $(shell find $(MODULE_MAIN) $(MODULE_TEST) setup.py test -iname '*.py')
+MODULE_VERSION  := $(shell $(PYTHON) -B -c 'import setup; print(setup.version)')
+MODULE_LICENSE  := $(shell $(PYTHON) -B -c 'import setup; print(setup.license)')
 ARTIFACTS_DIR   := artifacts/
 
 # Sphinx Documentation Generator
@@ -44,11 +45,23 @@ LICENSE_BADGE   := $(BADGES_DIR)license.svg
 COVERAGE_FILE   := .coverage
 COVERAGE_HTML   := $(ARTIFACTS_DIR)htmlcov/
 
-PYPI_SDIST      := dist/$(MODULE_MAIN)-$(MODULE_VERSION).tar.gz
+# Source Packages
+SDIST_NAME 			:= $(MODULE_MAIN)-$(MODULE_VERSION).tar.gz
+PYPI_SDIST      	:= dist/$(SDIST_NAME)
+DEBIAN_SDIST		:= ../$(SDIST_NAME)
 
-BUILD_DIRS 		:= $(wildcard build/) $(wildcard dist/) $(wildcard *.egg-info) $(wildcard $(ARTIFACTS_DIR)) $(wildcard __pycache__)
-MAKEFILE_DIR    := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-CLEAN_FILES     := $(BUILD_DIRS) $(wildcard .coverage) $(wildcard *.pyc)
+# Build FIles
+_BUILD_DIRS  		:= build dist *.egg-info .pytest_cache $(ARTIFACTS_DIR) $(DOC_BUILD_DIR)
+BUILD_DIRS  		:= $(strip $(foreach d,$(_BUILD_DIRS),$(wildcard $(d))))
+BUILD_DIRS 			+= $(foreach d,. * */* */*/* */*/*/*,$(wildcard $(d)/__pycache__))
+DOC_BUILD_FILES 	:= $(call rwildcard,$(DOC_APIDOC_DIR),*)
+
+# Source Files
+SOURCE_FILES 		:= $(call rwildcard,.,*.py)
+DOC_SOURCE_FILES	:= $(filter-out $(DOC_BUILD_FILES),$(call rwildcard,$(DOC_SOURCE_DIR),*.py *.rst))
+
+MAKEFILE_DIR    	:= $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+CLEAN_FILES     	:= $(foreach f, $(BUILD_DIRS) $(wildcard $(COVERAGE_FILE)), $(strip $(f)))
 
 
 default:
@@ -66,7 +79,9 @@ default:
 all: artifacts coverage-html doc pypi
 
 clean:
-	rm -fr "$(DOC_BUILD_DIR)" "$(DOC_APIDOC_DIR)" $(CLEAN_FILES)
+ifneq ($(strip $(CLEAN_FILES)),)
+	rm -rf $(CLEAN_FILES)
+endif
 
 test:
 	$(PYTHON) -m test
@@ -85,7 +100,7 @@ pypi-upload: pypi
 
 # Documentation Targets
 #------------------------------------------------------------------------------
-doc: $(DOC_BUILD_DIR)
+doc: $(DOC_BUILD_DIR) $(SOURCE_FILES) $(DOC_SOURCE_FILES)
 
 $(DOC_BUILD_DIR): $(SOURCE_FILES) | _sphinx_build
 	$(SPHINX_BUILD) -b html "$(DOC_SOURCE_DIR)" "$(DOC_BUILD_DIR)" $(SPHINX_OPTS)
@@ -93,10 +108,10 @@ $(DOC_BUILD_DIR): $(SOURCE_FILES) | _sphinx_build
 
 # Coverage Targets
 #------------------------------------------------------------------------------
-coverage: $(COVERAGE_FILE) | _coverage
+coverage: $(COVERAGE_FILE) $(SOURCE_FILES) | _coverage
 	$(COVERAGE) report
 
-coverage-html: $(COVERAGE_HTML)
+coverage-html: $(COVERAGE_HTML) $(SOURCE_FILES)
 
 $(COVERAGE_HTML): $(COVERAGE_FILE) | _coverage
 	[ ! -d "$(COVERAGE_HTML)" ] || rm -r "$(COVERAGE_HTML)"
