@@ -33,6 +33,7 @@ tasks:
       cd ${PACKAGE_NAME}
       source venv/bin/activate
       make test
+      make coverage
   - doc: |
       cd ${PACKAGE_NAME}
       source venv/bin/activate

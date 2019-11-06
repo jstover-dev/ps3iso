@@ -8,38 +8,49 @@ from collections import Counter
 from typing import Iterator, Union, List
 
 from .sfo import SfoFile
+from .sfo.errors import SfoParseError
 
 
 class Game(object):
+    """
+    Class representing a set of files making up a Playstation 3 game
+    An existing ``.iso`` file must be passed, files with any extension matching the base name
+    will be found and included in all operations
+
+    :param Path or str iso_path: Path to an existing .iso file
+    """
 
     def __init__(self, iso_path):
-        """
-        Class representing a set of files making up a Playstation 3 game
-        An existing .iso file must be passed, files with any extension matching the base name
-        will be found and included in all operations
 
-        :param Path or str iso_path: Path to an existing .iso file
-        """
         self.iso = Path(iso_path).resolve()
-        self.files = set(self.iso.parent.glob(glob.escape(self.iso.stem) + '.*'))
         self.sfo = self.extract_sfo(self.iso)
+        self.files = {self.iso, *self.iso.parent.glob(glob.escape(self.iso.stem) + '.*')}
+
+    @property
+    def exists(self):
+        return self.iso.exists()
 
     @classmethod
     def extract_sfo(cls, iso_path: Union[str, Path]) -> SfoFile:
         """
-        Read the PARAM.SFO data from an .iso file
+        Read the PARAM.SFO data from an ``.iso`` file
 
         .. seealso:: :meth:`.SfoFile.parse`
 
         :param iso_path: Path to the .iso file to read
         """
         iso_path = Path(iso_path)
+        if not iso_path.exists():
+            return SfoFile()
         cmd = ['isoinfo', '-i', str(iso_path), '-x', '/PS3_GAME/PARAM.SFO;1']
         proc = subprocess.run(cmd, capture_output=True)
         proc.check_returncode()
-        with io.BytesIO(proc.stdout) as f:
-            sfo = SfoFile.parse(f)
-        return sfo
+        try:
+            with io.BytesIO(proc.stdout) as f:
+                return SfoFile.parse(f)
+        except SfoParseError as ex:
+            ex.args = ('Error while extracting SFO from %s: %s' % (iso_path, str(ex)),)
+            raise
 
     def format_file(self, f: Union[str, Path], fmt: str, fill='') -> Path:
         """
@@ -75,7 +86,8 @@ class Game(object):
         ========  =========
 
 
-        .. seealso:: :meth:`.SfoFile.format`
+        .. seealso::
+            :meth:`.SfoFile.format`
 
         :param str fmt: Formatting string to use for output
         """
@@ -92,12 +104,12 @@ class Game(object):
             print('\n'.join(f'\t{k.ljust(width)}: {v}' for k, v in self.sfo))
 
     def __repr__(self):
-        return f'<{self.iso}|+{len(self.files) - 1}>'
+        return f'<{self.iso}|+{max(0, len(self.files) - 1)}>'
 
     @classmethod
-    def search(cls, path: Union[str, Path]) -> Iterator[SfoFile]:
+    def search(cls, path: Union[str, Path]) -> Iterator[Game]:
         """
-        Search for .iso files in the given path. Non-recursive and case-insensitive
+        Search for ``.iso`` files in the given path. Non-recursive and case-insensitive
 
         :param: Path to search
         """

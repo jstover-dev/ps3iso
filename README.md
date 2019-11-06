@@ -133,24 +133,37 @@ for game in games:
 
 Open an existing PARAM.SFO file and print all valid SFO attributes
 
-```python
-from ps3iso.sfo import SfoFile
+```pycon
+>>> from ps3iso.sfo import SfoFile
+>>> with open('test/data/PARAM.SFO', 'rb') as f:
+...	   sfo = SfoFile.parse(f)
+>>> for key, value in sfo:
+...     print("%s=%r" % (key, value))
+APP_VER='01.00'
+ATTRIBUTE=32
+BOOTABLE=1
+CATEGORY='DG'
+LICENSE='Some example license text, Supports UTF8 glyphs like ©and ®.'
+PARENTAL_LEVEL=5
+PS3_SYSTEM_VER='02.5200'
+RESOLUTION=63
+SOUND_FORMAT=1
+TITLE='Example PS3ISO Game Title'
+TITLE_ID='BLES00000'
+VERSION='01.00'
 
-with open('/path/to/PARAM.SFO', 'rb') as f:
-	sfo = SfoFile.parse(f)
-
-for key, value in sfo:
-	print("key=%s, value=%r" % (key, value))
 ```
 
 Read a specific attribute (`TITLE_ID`) from an existing PARAM.SFO
 
-```python
-from ps3iso.sfo import SfoFile
+```pycon
+>>> from ps3iso.sfo import SfoFile
+>>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+>>> print("Game ID = %s" % sfo.parameters.TITLE_ID)
+Game ID = BLES00000
+>>> print(sfo.format("Game Title = %T"))
+Game Title = Example PS3ISO Game Title
 
-sfo = SfoFile.parse_file('/path/to/PARAM.SFO')
-print("Game ID = %s" % sfo.TITLE_ID)
-print(sfo.format("Game Title = %T\n"))
 ```
 
 
