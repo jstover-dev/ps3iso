@@ -22,12 +22,14 @@ master_doc = 'index'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinxcontrib.apidoc',
+    #'sphinxcontrib.apidoc',
     'sphinxcontrib.autoprogram',
     'sphinxcontrib.fulltoc',
     'sphinx_autodoc_typehints',
     'sphinx_git',
     'generate_history',
+    'exec_directive',
+    'truncate_values',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -52,4 +54,7 @@ apidoc_excluded_paths = ['']
 apidoc_separate_modules = False
 apidoc_toc_file = False
 apidoc_module_first = True
+autodoc_member_order = 'bysource'
+
+
 

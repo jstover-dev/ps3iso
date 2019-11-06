@@ -13,3 +13,4 @@ build/
 artifacts/
 .pybuild/
 *.deb
+.DS_Store

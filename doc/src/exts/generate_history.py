@@ -67,7 +67,6 @@ def make_unreleased():
     return make_directive(None, previous_tag, title=git_branch())
 
 
-
 def replace_directive(text, directive, replace_fn):
     replace_idx = []
     lines = text.split('\n')
@@ -84,13 +83,16 @@ def replace_directive(text, directive, replace_fn):
     return '\n'.join(lines)
 
 
-
 def generate_changelog(app, docname, source):
-    source[0] = replace_directive(source[0], '.. history_changelog::', make_changelog)
-    source[0] = replace_directive(source[0], '.. history_unreleased::', make_unreleased)
-
     if docname == 'history':
-        print(source[0])
+        source[0] = replace_directive(source[0], '.. history_changelog::', make_changelog)
+        source[0] = replace_directive(source[0], '.. history_unreleased::', make_unreleased)
+        lines = []
+        for line in map(str.strip, source[0].split('\n')):
+            if not line or line[0] in ['.', '-', ':']:
+                continue
+            lines.append(line)
+        print('\n'.join(lines))
 
 
 def setup(app):

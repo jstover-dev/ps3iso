@@ -4,11 +4,11 @@ PS3ISO Documentation
 ============================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    cli
-   API Documentation <apidoc/ps3iso>
+   api
    history
 
 Indices and tables
