@@ -280,20 +280,24 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
                  fmt=SfoParameterFormat.int32),
 
     SfoParameter('APP_VER',
-                 optional=[SfoCategory.PS3],
+                 optional=[SfoCategory.PS3, SfoCategory.PSP],
                  fmt=SfoParameterFormat.utf8, length=6, maxlength=8),
 
     SfoParameter('ATTRIBUTE',
                  optional=[SfoCategory.PS3],
-                 required=[SfoCategory.PS1],
+                 required=[SfoCategory.PS1, SfoCategory.PSP],
                  fmt=SfoParameterFormat.int32),
 
     SfoParameter('BOOTABLE',
-                 required=[SfoCategory.PS3, SfoCategory.PS1],
+                 required=[SfoCategory.PS3,
+                           SfoCategory.PS1,
+                           SfoCategory.PSP],
                  fmt=SfoParameterFormat.int32),
 
     SfoParameter('CATEGORY',
-                 required=[SfoCategory.PS3, SfoCategory.PS1],
+                 required=[SfoCategory.PS3,
+                           SfoCategory.PS1,
+                           SfoCategory.PSP],
                  fmt=SfoParameterFormat.utf8, length=3, maxlength=4),
 
     SfoParameter('CONTENT_ID',
@@ -303,8 +307,34 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
     SfoParameter('DETAIL',
                  fmt=SfoParameterFormat.utf8, maxlength=1024),
 
+    SfoParameter('DISC_ID',
+                 required=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8, length=16),
+
+    SfoParameter('DISC_NUMBER',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
+
+    SfoParameter('DISC_TOTAL',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
+
+    SfoParameter('DISC_VERSION',
+                 required=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8,
+                 length=4, maxlength=8),
+
+    SfoParameter('DRIVER_PATH',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8,
+                 maxlength=64),
+
     SfoParameter('GAMEDATA_ID',
                  fmt=SfoParameterFormat.utf8, maxlength=32),
+
+    SfoParameter('HRKGMP_VER',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
 
     SfoParameter('ITEM_PRIORITY',
                  fmt=SfoParameterFormat.int32),
@@ -315,6 +345,10 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
     SfoParameter('LICENSE',
                  required=[SfoCategory.PS3],
                  fmt=SfoParameterFormat.utf8, maxlength=512),
+
+    SfoParameter('MEMSIZE',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
 
     SfoParameter('NP_COMMUNICATION_ID',
                  optional=[SfoCategory.PS3],
@@ -338,7 +372,7 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
                  fmt=SfoParameterFormat.int32),
 
     SfoParameter('PARENTAL_LEVEL',
-                 required=[SfoCategory.PS3],
+                 required=[SfoCategory.PS3, SfoCategory.PSP],
                  fmt=SfoParameterFormat.int32),
 
     SfoParameter('PARENTALLEVEL',
@@ -348,9 +382,23 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
     SfoParameter('PATCH_FILE',
                  fmt=SfoParameterFormat.utf8, maxlength=32),
 
+    SfoParameter('PBOOT_TITLE',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8, maxlength=128),
+
     SfoParameter('PS3_SYSTEM_VER',
                  required=[SfoCategory.PS3, SfoCategory.PS1],
                  fmt=SfoParameterFormat.utf8, length=8),
+
+    SfoParameter('PSP_SYSTEM_VER',
+                 required=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8, length=8),
+
+    SfoParameter('REGION',
+                 optional=[SfoCategory.PS1,
+                           SfoCategory.PS3,
+                           SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
 
     SfoParameter('REGION_DENY',
                  optional=[SfoCategory.PS3],
@@ -392,7 +440,9 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
                  fmt=SfoParameterFormat.utf8, length=6, maxlength=8),
 
     SfoParameter('TITLE',
-                 required=[SfoCategory.PS3, SfoCategory.PS1],
+                 required=[SfoCategory.PS3,
+                           SfoCategory.PS1,
+                           SfoCategory.PSP],
                  fmt=SfoParameterFormat.utf8, maxlength=128),
 
     SfoParameter('TITLE_ID',
@@ -400,6 +450,7 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
                  fmt=SfoParameterFormat.utf8, length=10, maxlength=16),
 
     SfoParameter('TITLE_xx',
+                 optional=[SfoCategory.PSP],
                  variable_key_range=['%02d' % x for x in range(30)],
                  fmt=SfoParameterFormat.utf8, maxlength=128),
 
@@ -407,6 +458,14 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
                  variable_key_range=['%02d' % x for x in range(30)],
                  optional=[SfoCategory.PS3],
                  fmt=SfoParameterFormat.utf8, length=9, maxlength=16),
+
+    SfoParameter('UPDATER_VER',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.utf8, length=4, maxlength=8),
+
+    SfoParameter('USE_USB',
+                 optional=[SfoCategory.PSP],
+                 fmt=SfoParameterFormat.int32),
 
     SfoParameter('VERSION',
                  required=[SfoCategory.PS3, SfoCategory.PS1],

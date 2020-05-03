@@ -1,6 +1,7 @@
 # PS3ISO
 
-Command line tool and Python library for managing existing Playstation 3 image files
+Command line tool and Python library for managing existing Playstation 3 and
+Playstation Portable image files
 
 [![PyPI version](https://badge.fury.io/py/ps3iso.svg)](https://pypi.org/project/ps3iso)
 [![builds.sr.ht status](https://builds.sr.ht/~jmstover/ps3iso.svg)](https://builds.sr.ht/~jmstover/ps3iso?)
@@ -39,12 +40,11 @@ usage: [-h] -i INPUT [-f FORMAT] [--rename]
 optional arguments:
   -h, --help            show this help message and exit
   -i INPUT, --input INPUT
-                        Path to the PS3 ISO file or directory containing PS3
-                        ISO files
+						Path to the ISO file or directory containing ISO files
   -f FORMAT, --format FORMAT
                         Format string to use for output or --rename target
   --rename              Rename .iso and supporting files to a format string
-                        based on PS3 metadata
+                        based on SFO metadata
 ```
 
 To rename all ISO files, plus all files with a matching name to a nice format:

@@ -24,12 +24,12 @@ def get_argparser(argv=None):
     parser.add_argument('-i', '--input',
                         type=Path,
                         required=True,
-                        help='Path to the PS3 ISO file or directory containing PS3 ISO files')
+                        help='Path to the ISO file or directory containing ISO files')
     parser.add_argument('-f', '--format',
                         help='Format string to use for output or --rename target')
     parser.add_argument('--rename',
                         action='store_true',
-                        help='Rename .iso and supporting files to a format string based on PS3 metadata')
+                        help='Rename .iso and supporting files to a format string based on SFO metadata')
     return parser
 
 

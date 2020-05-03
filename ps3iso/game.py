@@ -1,5 +1,6 @@
 from __future__ import annotations
 import io
+import os
 import re
 import glob
 import subprocess
@@ -42,7 +43,13 @@ class Game(object):
         iso_path = Path(iso_path)
         if not iso_path.exists():
             return SfoFile()
-        cmd = ['isoinfo', '-i', str(iso_path), '-x', '/PS3_GAME/PARAM.SFO;1']
+        cmd = ['isoinfo', '-i', str(iso_path), '-f']
+        proc = subprocess.run(cmd, capture_output=True)
+        proc.check_returncode()
+        valid_paths = [b'/PS3_GAME/PARAM.SFO;1', b'/PSP_GAME/PARAM.SFO']
+        path = next(filter(lambda x: x in valid_paths, proc.stdout.split()), False)
+        assert path, "PARAM.SFO not found."
+        cmd = ['isoinfo', '-i', str(iso_path), '-x', path]
         proc = subprocess.run(cmd, capture_output=True)
         proc.check_returncode()
         try:
