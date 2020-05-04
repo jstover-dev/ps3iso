@@ -250,7 +250,7 @@ class SfoParameter(object):
         Optionally set the initial value
 
         >>> SfoParameter.new('TITLE', 'NewValue')
-        SfoParameter('TITLE', fmt=SfoParameterFormat.utf8, length=None, maxlength=128, required=[SfoCategory.PS3, SfoCategory.PS1], optional=[], value='NewValue')
+        SfoParameter('TITLE', fmt=SfoParameterFormat.utf8, length=None, maxlength=128, required=[SfoCategory.PS3, SfoCategory.PS1, SfoCategory.PSP], optional=[], value='NewValue')
 
         """
         try:
@@ -474,7 +474,7 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
     SfoParameter('XMB_APPS',
                  fmt=SfoParameterFormat.int32),
 ))}
-""" 
+"""
     :type: Dict[str, SfoParameter]
 
     :annotation:
@@ -482,7 +482,7 @@ VALID_SFO_PARAMETERS = {p.name: p for p in ((
     This data is taken from the parameter table at https://psdevwiki.com/ps3/PARAM.SFO
     Each entry describes a valid SFO parameter, it's type, and length constraints.
     Each parameter can be made 'optional' or 'required' for any SfoCategory's.
-    
+
     .. exec::
         from tabulate import tabulate
         from ps3iso.sfo import VALID_SFO_PARAMETERS

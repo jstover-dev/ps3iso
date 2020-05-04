@@ -219,7 +219,7 @@ class SfoFile(object):
 
         >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
         >>> sfo.get_parameter('TITLE')
-        SfoParameter('TITLE', fmt=SfoParameterFormat.utf8, length=None, maxlength=128, required=[SfoCategory.PS3, SfoCategory.PS1], optional=[], value='Example PS3ISO Game Title')
+        SfoParameter('TITLE', fmt=SfoParameterFormat.utf8, length=None, maxlength=128, required=[SfoCategory.PS3, SfoCategory.PS1, SfoCategory.PSP], optional=[], value='Example PS3ISO Game Title')
 
         .. seealso::
             :meth:`.add_parameter`,
