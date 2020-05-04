@@ -21,8 +21,6 @@ environment:
     ARTIFACT_HOST: artifact.jstover.dev
 
 tasks:
-  - triggers: |
-      [ ! -x ~/.jenkins-hook ] || ~/.jenkins-hook
   - setup: |
       cd ${PACKAGE_NAME}
       python3 -m virtualenv -p python3 venv
