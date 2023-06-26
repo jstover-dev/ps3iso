@@ -351,7 +351,7 @@ class SfoFile(object):
         missing = set(required_params) - set(self._parameters._asdict())
         if bool(missing):
             raise SfoMissingParameterError(
-                f'Not a valid SFO File for {str(category)}. Missing Required parameters: {missing}')
+                f'Not a valid SFO File for {category!r}. Missing Required parameters: {missing}')
 
 
     def format(self, fmt: str) -> str:

@@ -37,10 +37,10 @@ tasks:
       source venv/bin/activate
       make doc
       [ ! -x ~/.rtd-hook ] || ~/.rtd-hook
-  - artifacts: |
-      cd ${PACKAGE_NAME}
-      source venv/bin/activate
-      make artifacts
-      ssh-keyscan -H ${ARTIFACT_HOST} >> $HOME/.ssh/known_hosts
-      rsync -vrz --delete artifacts/ "ci@${ARTIFACT_HOST}:"
+#  - artifacts: |
+#      cd ${PACKAGE_NAME}
+#      source venv/bin/activate
+#      make artifacts
+#      ssh-keyscan -H ${ARTIFACT_HOST} >> $HOME/.ssh/known_hosts
+#      rsync -vrz --delete artifacts/ "ci@${ARTIFACT_HOST}:" || true
 
