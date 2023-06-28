@@ -158,12 +158,10 @@ class SfoParameter(object):
         self.optional = optional or []
         self.variable_key_range = variable_key_range
 
-
     def __repr__(self):
         classname = self.__class__.__name__
         return '%s(%r, fmt=%s, length=%r, maxlength=%r, required=%r, optional=%r, value=%r)' % (
             classname, self.name, self.fmt, self.length, self.maxlength, self.required, self.optional, self.value)
-
 
     def __eq__(self, other):
         if not isinstance(other, SfoParameter):

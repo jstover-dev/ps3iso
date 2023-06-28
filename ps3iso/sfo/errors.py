@@ -32,5 +32,3 @@ class SfoIndexTableEntryParseError(SfoParseError):
 
 class SfoHeaderParseError(SfoParseError):
     """Named Exception raised when an parsing an invalid SfoHeader is attempted"""
-
-

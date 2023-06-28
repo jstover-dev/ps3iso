@@ -1,0 +1,41 @@
+name: CI
+on: [push]
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: packetcoders/action-setup-cache-python-poetry@v1.0.3
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: 1.4.2
+      - run: poetry run pytest
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: [ tests ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: packetcoders/action-setup-cache-python-poetry@v1.0.3
+        with:
+          python-version: 3.11
+          poetry-version: 1.4.2
+      - run: poetry run coverage run
+      - run: poetry run coverage report --format=markdown >> "$GITHUB_STEP_SUMMARY"
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    needs: [ tests ]
+    steps:
+      - run: |
+          cat << EOF >> "$GITHUB_STEP_SUMMARY"
+          ## Documentation updated
+          [https://ps3iso.readthedocs.io/en/latest/](https://ps3iso.readthedocs.io/en/latest/)
+          EOF

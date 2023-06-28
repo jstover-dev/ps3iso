@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "ps3iso"
+version = "0.4.1"
+license = "MIT"
+description = "CLI tool and Python library for managing Playstation 3 and PSP image files"
+authors = [
+    "Josh Stover <dev@jstover.net>"
+]
+readme = "README.md"
+homepage = "https://github.com/jstover-dev/ps3iso"
+repository = "https://github.com/jstover-dev/ps3iso"
+documentation = "https://ps3iso.readthedocs.io/en/stable"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
+
+[tool.poetry.urls]
+"Issue Tracker" = "https://github.com/jstover-dev/ps3iso/issues"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.1.1"
+mypy = "^1.4.1"
+
+[tool.poetry.group.tests.dependencies]
+pytest = "^7.4.0"
+coverage = {extras = ["toml"], version = "^7.2.7"}
+vulture = "^2.7"
+
+[tool.poetry.group.docs.dependencies]
+sphinx-autodoc-typehints = "^1.23.0"
+sphinx-git = "^11.0.0"
+sphinx-sitemap = "^2.5.0"
+sphinxcontrib-apidoc = "^0.3.0"
+sphinxcontrib-autoprogram = "^0.1.8"
+sphinxcontrib-fulltoc = "^1.2.0"
+
+[tool.poetry.scripts]
+ps3iso = "ps3iso.__main__:main"
+
+[tool.pytest.ini_options]
+addopts = '--color=yes --doctest-modules --doctest-glob=README.*'
+
+[tool.coverage.run]
+command_line = "-m tests"
+omit = ["*/__main__.py"]
+
+[tool.mypy]
+strict = true
+
+[tool.autoflake]
+recursive = true
+remove-all-unused-imports = true
+ignore-init-module-imports = true
+remove-unused-variables = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

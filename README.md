@@ -135,7 +135,7 @@ Open an existing PARAM.SFO file and print all valid SFO attributes
 
 ```pycon
 >>> from ps3iso.sfo import SfoFile
->>> with open('test/data/PARAM.SFO', 'rb') as f:
+>>> with open('tests/data/PARAM.SFO', 'rb') as f:
 ...	   sfo = SfoFile.parse(f)
 >>> for key, value in sfo:
 ...     print("%s=%r" % (key, value))
@@ -158,7 +158,7 @@ Read a specific attribute (`TITLE_ID`) from an existing PARAM.SFO
 
 ```pycon
 >>> from ps3iso.sfo import SfoFile
->>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+>>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
 >>> print("Game ID = %s" % sfo.parameters.TITLE_ID)
 Game ID = BLES00000
 >>> print(sfo.format("Game Title = %T"))

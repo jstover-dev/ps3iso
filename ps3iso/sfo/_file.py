@@ -2,7 +2,7 @@ from __future__ import annotations
 import struct
 from collections import UserList
 
-from .parameters import SfoParameter, SfoParameterFormat
+from .parameters import SfoParameterFormat
 from .errors import SfoHeaderParseError, SfoIndexTableEntryParseError, SfoIndexTableParseError, SfoParseError
 
 
@@ -18,7 +18,6 @@ class SfoHeader(object):
         self.key_table_start = key_table_start
         self.data_table_start = data_table_start
         self.table_entries = table_entries
-
 
     @classmethod
     def parse(cls, header_bytes, magic_check=True) -> SfoHeader:

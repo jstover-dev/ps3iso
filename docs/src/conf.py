@@ -1,6 +1,7 @@
 # http://www.sphinx-doc.org/en/master/config
 import os
 import sys
+from datetime import date
 
 # -- Path setup --------------------------------------------------------------
 
@@ -11,7 +12,7 @@ sys.path.append(os.path.abspath('exts'))
 # -- Project information -----------------------------------------------------
 
 project = 'PS3ISO'
-copyright = '2019, Joshua Stover'
+copyright = f'{date.today().year}, Joshua Stover'
 author = 'Joshua Stover'
 
 
@@ -55,6 +56,3 @@ apidoc_separate_modules = False
 apidoc_toc_file = False
 apidoc_module_first = True
 autodoc_member_order = 'bysource'
-
-
-

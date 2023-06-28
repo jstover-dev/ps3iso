@@ -5,7 +5,7 @@ import unittest
 
 class TestSfo(unittest.TestCase):
 
-    SFO_FILE = 'test/data/PARAM.SFO'
+    SFO_FILE = f'tests/data/PARAM.SFO'
     SFO_DATA = {
         'APP_VER': '01.00',
         'ATTRIBUTE': 32,
@@ -210,17 +210,14 @@ class TestSfo(unittest.TestCase):
             getattr(sfo.parameters, 'LICENSE')
         self.assertEqual(getattr(outfile.parameters, 'TITLE'), self.SFO_DATA['TITLE'])
 
-
     def test_repr(self):
         from ps3iso.sfo import SfoFile
-        from ps3iso.sfo._file import SfoIndexTable, SfoIndexTableEntry, SfoHeader
-        from ps3iso.sfo.parameters import SfoParameterFormat, SfoParameter
+        from ps3iso.sfo._file import SfoIndexTableEntry, SfoHeader, SfoIndexTable, SfoParameterFormat
         sfo = SfoFile.parse_file(self.SFO_FILE)
         self.assertEqual(sfo.index_table, eval(repr(sfo.index_table)))
         self.assertEqual(sfo.header, eval(repr(sfo.header)))
         p = getattr(sfo.parameters, 'TITLE')
         self.assertEqual(p, eval(repr(p)))
-
 
     def test_iter(self):
         from ps3iso.sfo import SfoFile

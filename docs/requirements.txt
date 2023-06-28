@@ -1,0 +1,6 @@
+sphinx-autodoc-typehints ~= 1.23.0
+sphinx-git ~= 11.0.0
+sphinx-sitemap ~= 2.5.0
+sphinxcontrib-apidoc ~= 0.3.0
+sphinxcontrib-autoprogram ~= 0.1.8
+sphinxcontrib-fulltoc ~= 1.2.0

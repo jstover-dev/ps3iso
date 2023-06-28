@@ -1,8 +1,8 @@
 from __future__ import annotations
-import io
 import struct
 from collections import namedtuple
-from typing import BinaryIO, NamedTuple, List
+from pathlib import Path
+from typing import BinaryIO, NamedTuple, List, Union
 
 from .parameters import (
     SfoCategory,
@@ -31,7 +31,7 @@ class SfoFile(object):
     Use the :meth:`.parse_file` method to create an object from an existing file,
     or use :meth:`.parse` directly on a seekable object such as :class:`io.BytesIO`
 
-    >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+    >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
     >>> sfo
     <SfoFile parameters=12 size=1041>
 
@@ -88,7 +88,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> with open('test/data/PARAM.SFO', 'rb') as f:
+        >>> with open('tests/data/PARAM.SFO', 'rb') as f:
         ...     sfo = SfoFile.parse(f)
         >>> print(sfo)
         <SfoFile parameters=12 size=1041>
@@ -145,7 +145,7 @@ class SfoFile(object):
 
 
     @classmethod
-    def parse_file(cls, path: str) -> SfoFile:
+    def parse_file(cls, path: Union[str, Path]) -> SfoFile:
         """
         Create a new SfoFile object from an existing SFO file
 
@@ -154,12 +154,13 @@ class SfoFile(object):
 
         :Example:
 
-        >>> SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> SfoFile.parse_file('tests/data/PARAM.SFO')
         <SfoFile parameters=12 size=1041>
 
         """
+        path = Path(path)
         try:
-            with open(path, 'rb') as f:
+            with path.open('rb') as f:
                 return cls.parse(f)
         except SfoParseError as ex:
             raise SfoParseError(str(ex), path) from ex.__cause__
@@ -174,7 +175,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.keys
         ['APP_VER', 'ATTRIBUTE', 'BOOTABLE', 'CATEGORY', 'LICENSE', 'PARENTAL_LEVEL', 'PS3_SYSTEM_VER', 'RESOLUTION', 'SOUND_FORMAT', 'TITLE', 'TITLE_ID', 'VERSION']
 
@@ -191,7 +192,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.parameters
         SfoParameters(APP_VER='01.00', ATTRIBUTE=32, BOOTABLE=1, CATEGORY='DG', LICENSE='Some example license text, Supports UTF8 glyphs like ©and ®.', PARENTAL_LEVEL=5, PS3_SYSTEM_VER='02.5200', RESOLUTION=63, SOUND_FORMAT=1, TITLE='Example PS3ISO Game Title', TITLE_ID='BLES00000', VERSION='01.00')
 
@@ -206,7 +207,6 @@ class SfoFile(object):
         """
         return self._parameters._make(x.value for x in self._parameters)
 
-
     def get_parameter(self, name: str) -> SfoParameter:
         r"""
         Retrieve an underlying :class:`.SfoParameter` object.
@@ -217,7 +217,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.get_parameter('TITLE')
         SfoParameter('TITLE', fmt=SfoParameterFormat.utf8, length=None, maxlength=128, required=[SfoCategory.PS3, SfoCategory.PS1, SfoCategory.PSP], optional=[], value='Example PS3ISO Game Title')
 
@@ -231,7 +231,6 @@ class SfoFile(object):
         except AttributeError:
             raise SfoParameterNotFoundError('Parameter Not Found: ' + name)
 
-
     def add_parameter(self, name: str, value=None) -> None:
         """
         Add a new parameter to the :class:`.SfoFile`.
@@ -243,7 +242,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.parameters.REGION_DENY
         Traceback (most recent call last):
         AttributeError: 'SfoParameters' object has no attribute 'REGION_DENY'
@@ -265,7 +264,6 @@ class SfoFile(object):
         self._parameters = namedtuple('SfoParameters', names)(*values)
         self._update_index()
 
-
     def set_parameter(self, name: str, value: str) -> None:
         """
         Set the value of a parameter in the current :class:`.SfoFile`, creating it if it does not exist.
@@ -276,7 +274,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.parameters.TITLE_ID
         'BLES00000'
         >>> sfo.set_parameter('TITLE_ID', 'BLES11111')
@@ -295,7 +293,6 @@ class SfoFile(object):
             p.value = value
         self._update_index()
 
-
     def remove_parameter(self, name: str) -> None:
         """
         Remove a parameter from the current :class:`.SfoFile`
@@ -305,7 +302,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.parameters.TITLE_ID
         'BLES00000'
         >>> sfo.remove_parameter('TITLE_ID')
@@ -333,7 +330,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.verify_parameters(SfoCategory.PS3)
         >>> sfo.remove_parameter('TITLE')
         >>> sfo.verify_parameters(SfoCategory.PS3)
@@ -380,7 +377,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.format('[%I]_(%T).iso')
         '[BLES00000]_(Example PS3ISO Game Title).iso'
 
@@ -413,8 +410,8 @@ class SfoFile(object):
         :rtype: int
 
         :Example:
-
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> import io
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.set_parameter('TITLE', 'NewTitle')
         >>> bio = io.BytesIO()
         >>> sfo.write(bio)
@@ -434,7 +431,7 @@ class SfoFile(object):
 
         :Example:
 
-        >>> sfo = SfoFile.parse_file('test/data/PARAM.SFO')
+        >>> sfo = SfoFile.parse_file('tests/data/PARAM.SFO')
         >>> sfo.set_parameter('TITLE', 'NewTitle')
         >>> sfo.write_file('NewTitle.SFO')
         1041

@@ -1,4 +1,3 @@
-import sys
 from pytest import main
 from pathlib import Path
 
